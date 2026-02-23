@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miki English Trainer</title>
+
+<link rel="manifest" href="manifest.json">
+
+<style>
+body{
+  background:#0f0f0f;
+  color:#ffffff;
+  font-family:Arial, sans-serif;
+  text-align:center;
+  padding:30px;
+}
+.card{
+  background:#1c1c1c;
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 0 20px rgba(0,0,0,0.8);
+  max-width:400px;
+  margin:auto;
+}
+input{
+  width:90%;
+  padding:12px;
+  margin-top:15px;
+  font-size:18px;
+  border-radius:10px;
+  border:none;
+  text-align:center;
+}
+button{
+  margin-top:15px;
+  padding:12px 25px;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  background:#00ffcc;
+  color:#000;
+  font-weight:bold;
+}
+.correct{color:#00ff88;}
+.wrong{color:#ff4444;}
+.small{font-size:14px;opacity:0.6;}
+</style>
+</head>
+<body>
+
+<h2>Miki English Trainer</h2>
+
+<div class="card">
+  <h3 id="question"></h3>
+  <input type="text" id="answer" placeholder="Type here..." autocomplete="off"/>
+  <br>
+  <button onclick="checkAnswer()">Check</button>
+  <p id="result"></p>
+  <p class="small" id="progress"></p>
+</div>
+
+<script>
+
+let words = [
+ {jp:"損害、損傷、被害", en:"damage"},
+ {jp:"度", en:"degree"},
+ {jp:"大喜び、歓喜、楽しみ", en:"delight"},
+ {jp:"需要", en:"demand"},
+ {jp:"歯医者、歯科医", en:"dentist"},
+ {jp:"デザイン、意匠、設計、構図", en:"design"},
+ {jp:"発達、発展、成長、発育", en:"development"},
+ {jp:"難しさ、困難、苦労、難易度", en:"difficulty"}
+];
+
+let current = 0;
+let mistakes = [];
+
+function showQuestion(){
+ document.getElementById("question").innerText = words[current].jp;
+ document.getElementById("progress").innerText =
+   (current+1) + " / " + words.length;
+ document.getElementById("answer").value="";
+ document.getElementById("result").innerText="";
+}
+
+function checkAnswer(){
+ let input = document.getElementById("answer").value.trim().toLowerCase();
+ if(input === words[current].en){
+   document.getElementById("result").innerHTML =
+     "<span class='correct'>Correct!</span>";
+ }else{
+   document.getElementById("result").innerHTML =
+     "<span class='wrong'>Wrong! 正解: "+words[current].en+"</span>";
+   mistakes.push(words[current]);
+ }
+
+ current++;
+
+ if(current >= words.length){
+   if(mistakes.length > 0){
+     words = mistakes;
+     mistakes = [];
+     current = 0;
+     setTimeout(()=>alert("間違えた単語を復習します🔥"),500);
+   }else{
+     setTimeout(()=>alert("全部正解！完璧🔥"),500);
+     current = 0;
+   }
+ }
+
+ setTimeout(showQuestion,1000);
+}
+
+showQuestion();
+
+</script>
+
+</body>
+</html>
